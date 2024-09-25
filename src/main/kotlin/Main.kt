@@ -26,15 +26,18 @@ y cree un fichero en formato csv con el mínimo, el máximo y la media de dada c
 */
 
 fun main() {
-    val rutaFichero = Path("src\\main\\resources\\cotizacion.csv")
-    val diccionario = readFile(rutaFichero)
+    val rutaFicheroLectura = Path("src\\main\\resources\\cotizacion.csv")
+    val rutaFicheroEscritua = Path("src\\main\\resources\\columnas.csv")
+    val diccionario = organizarFicheroDiccionario(rutaFicheroLectura)
+
+    crearFicheroFormato(diccionario, rutaFicheroEscritua)
 
     diccionario.forEach {
         columna -> println(columna)
     }
 }
 
-fun readFile(ruta: Path): MutableMap<String, List<String>> {
+fun organizarFicheroDiccionario(ruta: Path): MutableMap<String, List<String>> {
 
     val diccionario: MutableMap<String, List<String>> = mutableMapOf()
     val br: BufferedReader = Files.newBufferedReader(ruta)
@@ -47,6 +50,7 @@ fun readFile(ruta: Path): MutableMap<String, List<String>> {
                 line ->
             if (firstLineRead) {
 
+                // Usamos un regex para quitar solo los "." que van seguidos de 3 cifras numericas para facilitar el formateo
                 val regex = Regex("""\.\d{3}""")
                 val lineaFormateada = line.replace(regex) {
                     ""
@@ -73,4 +77,22 @@ fun readFile(ruta: Path): MutableMap<String, List<String>> {
     }
 
     return diccionario
+}
+
+fun crearFicheroFormato(diccionario: MutableMap<String, List<String>>, ruta: Path) {
+
+    diccionario.remove("Nombre")
+
+    Files.createDirectories(ruta.parent)
+
+    val bw: BufferedWriter = Files.newBufferedWriter(ruta, StandardOpenOption.CREATE, StandardOpenOption.WRITE)
+
+    bw.use { writer ->
+
+        diccionario.forEach { (key, value) ->
+            val doubleList: List<Double> = value.map { it.toDouble() }
+            writer.write("Columna ${key}- Mínimo columna: ${doubleList.min()}, Máximo columna: ${doubleList.max()}, Media columna: ${doubleList.average()}")
+            writer.newLine()
+        }
+    }
 }
