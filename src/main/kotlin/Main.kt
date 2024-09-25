@@ -47,7 +47,10 @@ fun readFile(ruta: Path): MutableMap<String, List<String>> {
                 line ->
             if (firstLineRead) {
 
-                val lineaFormateada = line.replace(".", "")
+                val regex = Regex("""\.\d{3}""")
+                val lineaFormateada = line.replace(regex) {
+                    ""
+                }.replace(",", ".")
                 val lineaSpliteada: List<String> = lineaFormateada.split(";")
                 fileLines.add(lineaSpliteada)
 
