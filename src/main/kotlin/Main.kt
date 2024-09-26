@@ -88,10 +88,11 @@ fun crearFicheroFormato(diccionario: MutableMap<String, List<String>>, ruta: Pat
     val bw: BufferedWriter = Files.newBufferedWriter(ruta, StandardOpenOption.CREATE, StandardOpenOption.WRITE)
 
     bw.use { writer ->
-
+        writer.write("Columna; Mínimo columna; Máximo columna:; Media columna:")
+        writer.newLine()
         diccionario.forEach { (key, value) ->
             val doubleList: List<Double> = value.map { it.toDouble() }
-            writer.write("Columna ${key}; Mínimo columna: ${doubleList.min()}; Máximo columna: ${doubleList.max()}; Media columna: ${doubleList.average()}")
+            writer.write("${key};${doubleList.min()};${doubleList.max()};${doubleList.average()}")
             writer.newLine()
         }
     }
