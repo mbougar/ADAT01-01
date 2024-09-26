@@ -91,7 +91,7 @@ fun crearFicheroFormato(diccionario: MutableMap<String, List<String>>, ruta: Pat
 
         diccionario.forEach { (key, value) ->
             val doubleList: List<Double> = value.map { it.toDouble() }
-            writer.write("Columna ${key}- Mínimo columna: ${doubleList.min()}, Máximo columna: ${doubleList.max()}, Media columna: ${doubleList.average()}")
+            writer.write("Columna ${key}; Mínimo columna: ${doubleList.min()}; Máximo columna: ${doubleList.max()}; Media columna: ${doubleList.average()}")
             writer.newLine()
         }
     }
